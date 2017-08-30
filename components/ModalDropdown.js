@@ -50,7 +50,9 @@ export default class ModalDropdown extends Component {
 
     onDropdownWillShow: PropTypes.func,
     onDropdownWillHide: PropTypes.func,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+
+    renderCustomButton: PropTypes.func
   };
 
   static defaultProps = {
@@ -162,10 +164,13 @@ export default class ModalDropdown extends Component {
           this.props.children ||
           (
             <View style={styles.button}>
-              <Text style={[styles.buttonText, this.props.textStyle]}
-                    numberOfLines={1}>
+              {this.props.renderCustomButton
+                ? this.props.renderCustomButton()
+                : <Text style={[styles.buttonText, this.props.textStyle]}
+                numberOfLines={1}>
                 {this.state.buttonText}
-              </Text>
+                </Text>
+              }
             </View>
           )
         }
@@ -352,15 +357,18 @@ export default class ModalDropdown extends Component {
   }
 
   _onRowPress(rowData, sectionID, rowID, highlightRow) {
+    // if (this.props.renderCustomButton) {
+    //   return
+    // }
     if (!this.props.onSelect ||
       this.props.onSelect(rowID, rowData) !== false) {
       highlightRow(sectionID, rowID);
       this._nextValue = rowData;
       this._nextIndex = rowID;
-      this.setState({
-        buttonText: rowData.toString(),
-        selectedIndex: rowID
-      });
+      // this.setState({
+        // buttonText: rowData.toString(),
+        // selectedIndex: rowID
+      // });
     }
     if (!this.props.onDropdownWillHide ||
       this.props.onDropdownWillHide() !== false) {
