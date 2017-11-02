@@ -52,7 +52,9 @@ export default class ModalDropdown extends Component {
     onDropdownWillHide: PropTypes.func,
     onSelect: PropTypes.func,
 
-    renderCustomButton: PropTypes.func
+    renderCustomButton: PropTypes.func,
+
+    customTextProps: PropTypes.object
   };
 
   static defaultProps = {
@@ -62,7 +64,8 @@ export default class ModalDropdown extends Component {
     options: null,
     animated: true,
     showsVerticalScrollIndicator: true,
-    keyboardShouldPersistTaps: 'never'
+    keyboardShouldPersistTaps: 'never',
+    customTextProps: {allowFontScaling: false}
   };
 
   constructor(props) {
@@ -167,7 +170,8 @@ export default class ModalDropdown extends Component {
               {this.props.renderCustomButton
                 ? this.props.renderCustomButton()
                 : <Text style={[styles.buttonText, this.props.textStyle]}
-                numberOfLines={1}>
+                        numberOfLines={1}
+                        {...this.props.customTextProps}>
                 {this.state.buttonText}
                 </Text>
               }
@@ -288,17 +292,18 @@ export default class ModalDropdown extends Component {
   _renderRow(rowData, sectionID, rowID, highlightRow) {
     let key = `row_${rowID}`;
     let highlighted = rowID == this.state.selectedIndex;
-    let row = !this.props.renderRow ?
-      (<Text style={[
-        styles.rowText,
-        this.props.dropdownTextStyle,
-        highlighted && styles.highlightedRowText,
-        highlighted && this.props.dropdownTextHighlightStyle
-      ]}
-      >
-        {rowData}
-      </Text>) :
-      this.props.renderRow(rowData, rowID, highlighted);
+    let row = !this.props.renderRow
+        ? <Text style={[
+            styles.rowText,
+            this.props.dropdownTextStyle,
+            highlighted && styles.highlightedRowText,
+            highlighted && this.props.dropdownTextHighlightStyle
+        ]}
+                {...this.props.customTextProps}
+        >
+            {rowData}
+        </Text>
+        : this.props.renderRow(rowData, rowID, highlighted)
     let preservedProps = {
       key: key,
       accessible: this.props.accessible,
