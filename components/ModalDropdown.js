@@ -29,6 +29,7 @@ const TOUCHABLE_ELEMENTS = ['TouchableHighlight', 'TouchableOpacity', 'Touchable
 export default class ModalDropdown extends Component {
   static propTypes = {
     disabled: PropTypes.bool,
+    scrollEnabled: PropTypes.bool,
     defaultIndex: PropTypes.number,
     defaultValue: PropTypes.string,
     options: PropTypes.array,
@@ -59,6 +60,7 @@ export default class ModalDropdown extends Component {
 
   static defaultProps = {
     disabled: false,
+    scrollEnabled: true,
     defaultIndex: -1,
     defaultValue: 'Please select...',
     options: null,
@@ -271,7 +273,8 @@ export default class ModalDropdown extends Component {
 
   _renderDropdown() {
     return (
-      <ListView style={styles.list}
+      <ListView scrollEnabled={this.props.scrollEnabled}
+                style={styles.list}
                 dataSource={this._dataSource}
                 renderRow={this._renderRow.bind(this)}
                 renderSeparator={this.props.renderSeparator || this._renderSeparator.bind(this)}
